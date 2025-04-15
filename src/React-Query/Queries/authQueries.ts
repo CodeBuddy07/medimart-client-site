@@ -86,7 +86,7 @@ export const useLogout = () => {
     onSuccess: () => {
       queryClient.clear();
       toast('Logged out successfully', { icon: '👋' });
-      router.push('/login');
+      router.push('/log-in');
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Logout failed');

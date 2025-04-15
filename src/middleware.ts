@@ -3,33 +3,41 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
 
-
-export async function middleware (request: NextRequest) {
-
-  const token = request.cookies.get('accessToken')?.value || 'guest'
-
-  const secret = new TextEncoder().encode(process.env.SECRET)
-
-  const { payload } = await jwtVerify(token, secret) as { payload: { role?: string } };
-
-  const role = payload.role ?? "guest";
-  
-
-  const protectedRoutes = {
-    '/admin': ['admin'],
-    '/dashboard': ['admin', 'customer'],
-    '/profile': ['admin', 'user', 'guest'],
-  }
-
-  const path = request.nextUrl.pathname
-  const route = Object.keys(protectedRoutes).find(route => path.startsWith(route))
-
-  if (route) {
-    const allowedRoles = route ? protectedRoutes[route as keyof typeof protectedRoutes] : []
-    if (!allowedRoles.includes(role)) {
-      return NextResponse.redirect(new URL('/log-in', request.url))
+export async function middleware(request: NextRequest) {
+  try {
+    const token = request.cookies.get('accessToken')?.value
+    const secret = new TextEncoder().encode(process.env.SECRET!)
+    
+    let role = "guest"
+    if (token) {
+      const { payload } = await jwtVerify(token, secret)
+      role = payload.role?.toString() || "guest"
     }
-  }
 
-  return NextResponse.next()
+    const protectedRoutes = {
+      '/admin': ['admin'],
+      '/dashboard': ["admin", 'customer'],
+      '/profile': ['admin', 'user', 'guest'],
+    }
+
+    const path = request.nextUrl.pathname
+    const route = Object.keys(protectedRoutes).find(route => path.startsWith(route))
+
+    if (route) {
+      const allowedRoles = protectedRoutes[route as keyof typeof protectedRoutes]
+      if (!allowedRoles.includes(role)) {
+        const unauthorizedUrl = new URL('/unauthorized', request.url)
+        unauthorizedUrl.searchParams.set('message', `Your ${role} account cannot access ${route}`)
+        unauthorizedUrl.searchParams.set('from', path)
+        return NextResponse.redirect(unauthorizedUrl)
+      }
+    }
+
+    return NextResponse.next()
+  } catch (error) {
+    console.error('Middleware error:', error)
+    const unauthorizedUrl = new URL('/unauthorized', request.url)
+    unauthorizedUrl.searchParams.set('message', 'Your session is invalid or expired')
+    return NextResponse.redirect(unauthorizedUrl)
+  }
 }
