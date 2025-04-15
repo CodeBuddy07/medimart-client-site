@@ -1,4 +1,4 @@
-// middleware.ts
+
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
@@ -9,6 +9,7 @@ export async function middleware(request: NextRequest) {
     const secret = new TextEncoder().encode(process.env.SECRET!)
     
     let role = "guest"
+
     if (token) {
       const { payload } = await jwtVerify(token, secret)
       role = payload.role?.toString() || "guest"
@@ -36,8 +37,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   } catch (error) {
     console.error('Middleware error:', error)
-    const unauthorizedUrl = new URL('/unauthorized', request.url)
-    unauthorizedUrl.searchParams.set('message', 'Your session is invalid or expired')
-    return NextResponse.redirect(unauthorizedUrl)
+    const unauthorizedUrl = new URL('/log-in', request.url)
+    return NextResponse.redirect(unauthorizedUrl);
   }
 }

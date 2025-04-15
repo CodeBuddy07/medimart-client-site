@@ -35,7 +35,7 @@ export const useRegister = () => {
     mutationFn: async (data: RegisterData) => {
       const formData = new FormData();
       
-      // Append all simple fields
+
       formData.append('name', data.name);
       formData.append('email', data.email);
       formData.append('password', data.password);
@@ -73,7 +73,6 @@ export const useRefreshToken = () => {
   });
 };
 
-// 🔹 Logout Mutation
 export const useLogout = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -113,26 +112,40 @@ export const useUpdateUser = () => {
 };
 
 
-export const useGetAllUsers = (search = '', page = 1, limit = 10) => {
+export const useGetAllUsers = (
+  search: string = '', 
+  page: number = 1, 
+  limit: number = 10,
+  enabled: boolean = true
+) => {
   return useQuery({
     queryKey: ['users', search, page, limit],
     queryFn: async () => {
       const response = await axiosSecure.get('/users', {
-        params: { search, page, limit },
+        params: { 
+          search, 
+          page, 
+          limit 
+        },
       });
-      return response.data;
+      return response.data.data; 
     },
+    enabled,
+    staleTime: 1000 * 60 * 5, 
   });
 };
 
-
-export const useGetCurrentUser = () => {
+export const useGetMe = () => {
   return useQuery({
-    queryKey: ['current-user'],
+    queryKey: ['currentUser'],
     queryFn: async () => {
       const response = await axiosSecure.get('/me');
-      return response.data;
+      return response.data.data; 
     },
-    retry: false,
+    staleTime: 1000 * 60 * 5, 
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401) return false;
+      return failureCount < 3;
+    }
   });
 };

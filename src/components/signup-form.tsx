@@ -43,7 +43,7 @@ export function RegisterForm({
   };
 
   const onSubmit = (data: RegisterData) => {
-    // Directly pass the data to registerUser
+
     let formData = { ...data }; ;
     if (fileInputRef.current && fileInputRef.current.files) {
       formData = { ...formData, Image: fileInputRef.current.files[0] };
