@@ -16,4 +16,77 @@ interface UpdateData {
     [key: string]: any;
 }
 
+interface IUser {
+    _id: string;
+    name: string;
+    email: string;
+    password: string;
+    role: "admin" | "customer";
+    profileImage: {
+        url: string;
+        publicId: string;
+    };
+    phone: string;
+    address?: {
+        street: string;
+        city: string;
+        state: string;
+        postalCode: string;
+        country: string;
+    };
+    refreshToken: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 
+}
+
+interface IOrder {
+    _id: string;
+    user: Types.ObjectId;
+    items: {
+        medicine: Types.ObjectId;
+        quantity: number;
+        price: number;
+    }[];
+    totalPrice: number;
+    status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+    paymentStatus: "pending" | "paid" | "failed";
+    paymentMethod: "COD" | "Credit Card" | "Debit Card" | "UPI" | "PayPal";
+    deliveryAddress: {
+        street: string;
+        city: string;
+        state: string;
+        postalCode: string;
+        country: string;
+    };
+    prescription?: {
+        url: string;
+        publicId: string;
+    };
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+interface IMedicine {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    requiredPrescription: boolean;
+    manufacturer: {
+        name: string;
+        address: string;
+        contact: string;
+    };
+    symptoms: string[];
+    category: string;
+    images:[
+        {
+            url: string;
+            publicId: string;
+        }
+    ];
+    createdAt?: Date;
+    updatedAt?: Date;
+}

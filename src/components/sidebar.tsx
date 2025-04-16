@@ -10,14 +10,47 @@ import {
   Users, 
   FileText, 
   Settings,
-  ClipboardList
+  ClipboardList,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useGetMe } from "@/React-Query/Queries/authQueries";
-
+import { useEffect, useState } from "react";
+import { useDashboardStore } from "./dashboard-store";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
   const { data: user } = useGetMe();
+  const [isMobile, setIsMobile] = useState(false);
+  
+  const { 
+    isCollapsed, 
+    isMobileOpen,
+    toggleSidebar, 
+    closeSidebar, 
+    setIsMobileOpen
+  } = useDashboardStore();
+  
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      
+      if (!mobile) {
+        setIsMobileOpen(false);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setIsMobileOpen]);
+
+  useEffect(() => {
+    if (isMobile) {
+      closeSidebar();
+    }
+  }, [pathname, isMobile, closeSidebar]);
 
   const adminNavItems = [
     {
@@ -29,10 +62,6 @@ export function DashboardSidebar() {
       href: "/dashboard/medicines",
       icon: Pill,
       label: "Manage Medicines",
-      subItems: [
-        { href: "/dashboard/medicines/add", label: "Add Medicine" },
-        { href: "/dashboard/medicines/inventory", label: "Inventory" }
-      ]
     },
     {
       href: "/dashboard/orders",
@@ -84,59 +113,96 @@ export function DashboardSidebar() {
   const navItems = user?.role === "admin" ? adminNavItems : customerNavItems;
 
   return (
-    <div className="hidden border-r bg-muted/40 md:block w-64 fixed h-screen">
-      <div className="flex h-full flex-col gap-2">
-        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <span className="text-xl">MediMart</span>
-          </Link>
-        </div>
-        <div className="flex-1 p-2">
-          <nav className="grid items-start gap-1">
-            {navItems.map((item) => (
-              <div key={item.href}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                    pathname === item.href && "bg-muted text-primary"
-                  )}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
+    <>
+      {isMobile && isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={closeSidebar}
+        />
+      )}
+
+      <aside 
+        className={cn(
+          "border-r bg-muted h-screen fixed md:relative z-50 transition-all duration-300",
+          isMobile ? "left-0 top-0" : "",
+          isMobile ? (isMobileOpen ? "translate-x-0" : "-translate-x-full") : "",
+          isCollapsed ? "w-20" : "w-64"
+        )}
+      >
+        <div className="flex h-full flex-col gap-2">
+          {!isMobile && (
+            <div className={cn(
+              "flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6",
+              isCollapsed ? "justify-center" : "justify-between"
+            )}>
+              {!isCollapsed && (
+                <Link href="/" className="flex items-center gap-2 font-semibold">
+                  <span className="text-xl">MediMart</span>
                 </Link>
-                
-                {item.subItems && pathname.startsWith(item.href) && (
-                  <div className="ml-8 mt-1 space-y-1">
-                    {item.subItems.map((subItem) => (
-                      <Link
-                        key={subItem.href}
-                        href={subItem.href}
-                        className={cn(
-                          "flex items-center gap-2 rounded-lg px-2 py-1 text-xs text-muted-foreground hover:text-primary",
-                          pathname === subItem.href && "text-primary font-medium"
-                        )}
-                      >
-                        • {subItem.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-        </div>
-        <div className="p-4 border-t">
-          <div className="flex items-center gap-3">
-            <div className="flex flex-col">
-              <span className="font-medium">{user?.name}</span>
-              <span className="text-xs text-muted-foreground capitalize">
+              )}
+              <button 
+                onClick={toggleSidebar}
+                className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-muted"
+              >
+                {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+              </button>
+            </div>
+          )}
+          
+          <div className="flex-1 p-2 overflow-y-auto">
+            <nav className="grid items-start gap-1">
+              {navItems.map((item) => (
+                <div key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                      pathname === item.href && "bg-muted text-primary",
+                      isCollapsed && !isMobile ? "justify-center" : ""
+                    )}
+                    title={isCollapsed && !isMobile ? item.label : undefined}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {(!isCollapsed || isMobile) && item.label}
+                  </Link>
+                  
+                  {item.subItems && pathname.startsWith(item.href) && (!isCollapsed || isMobile) && (
+                    <div className="ml-8 mt-1 space-y-1">
+                      {item.subItems.map((subItem) => (
+                        <Link
+                          key={subItem.href}
+                          href={subItem.href}
+                          className={cn(
+                            "flex items-center gap-2 rounded-lg px-2 py-1 text-xs text-muted-foreground hover:text-primary",
+                            pathname === subItem.href && "text-primary font-medium"
+                          )}
+                        >
+                          • {subItem.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </nav>
+          </div>
+          
+          <div className={cn(
+            "p-4 border-t flex items-center gap-3",
+            isCollapsed && !isMobile ? "justify-center" : ""
+          )}>
+            <div className={cn(
+              "flex flex-col overflow-hidden transition-all",
+              isCollapsed && !isMobile ? "w-0 opacity-0" : "w-full opacity-100"
+            )}>
+              <span className="font-medium truncate">{user?.name}</span>
+              <span className="text-xs text-muted-foreground capitalize truncate">
                 {user?.role}
               </span>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </aside>
+    </>
   );
 }

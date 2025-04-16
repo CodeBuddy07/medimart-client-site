@@ -121,7 +121,7 @@ export const useGetAllUsers = (
   return useQuery({
     queryKey: ['users', search, page, limit],
     queryFn: async () => {
-      const response = await axiosSecure.get('/users', {
+      const response = await axiosSecure.get('/', {
         params: { 
           search, 
           page, 

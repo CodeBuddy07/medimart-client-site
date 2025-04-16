@@ -8,29 +8,61 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, LogOut, Settings, User } from "lucide-react";
+import { Loader2, LogOut, Settings, User, Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useGetMe, useLogout } from "@/React-Query/Queries/authQueries";
-
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { useDashboardStore } from "./dashboard-store";
 
 export function DashboardNavbar() {
   const router = useRouter();
   const { data: user } = useGetMe();
   const { mutate: logOut, isPending } = useLogout();
+  const { isCollapsed, setIsMobileOpen, isMobileOpen } = useDashboardStore();
+  const [isMobile, setIsMobile] = useState(false);
 
-  const handleLogout = async () => { 
-    
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleLogout = () => { 
     logOut();
+  };
 
+  const toggleMobileMenu = () => {
+    setIsMobileOpen(!isMobileOpen);
   };
 
   return (
-    <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 ml-64">
+    <header className={cn(
+      "flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6",
+      !isMobile && (isCollapsed ? "md:ml-0" : "md:ml-0"),
+      "transition-all duration-300"
+    )}>
+      {isMobile && (
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="md:hidden"
+          onClick={toggleMobileMenu}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+      )}
+
       <div className="flex-1">
         <h1 className="text-lg font-semibold">
           {user?.role === 'admin' ? 'Admin Dashboard' : 'My Dashboard'}
         </h1>
       </div>
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -61,7 +93,6 @@ export function DashboardNavbar() {
             className="flex items-center gap-2 text-red-600"
             onClick={handleLogout}
             disabled={isPending}
-
           >
             <LogOut className="h-4 w-4" />
             <span>Logout</span>

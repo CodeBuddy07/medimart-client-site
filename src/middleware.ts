@@ -7,12 +7,22 @@ export async function middleware(request: NextRequest) {
   try {
     const token = request.cookies.get('accessToken')?.value
     const secret = new TextEncoder().encode(process.env.SECRET!)
-    
+
     let role = "guest"
 
     if (token) {
-      const { payload } = await jwtVerify(token, secret)
-      role = payload.role?.toString() || "guest"
+      try {
+        const { payload } = await jwtVerify(token, secret)
+        role = payload.role as string
+      }
+      catch (error) {
+        console.error('JWT verification error:', error);
+        NextResponse.json({ message: 'Logged out' }).cookies.set('accessToken', '', {
+          httpOnly: true,
+          path: '/',
+          expires: new Date(0), 
+        });
+      }
     }
 
     const protectedRoutes = {
@@ -36,7 +46,7 @@ export async function middleware(request: NextRequest) {
 
     return NextResponse.next()
   } catch (error) {
-    console.error('Middleware error:', error)
+    console.error('Middleware error:', error);
     const unauthorizedUrl = new URL('/log-in', request.url)
     return NextResponse.redirect(unauthorizedUrl);
   }
