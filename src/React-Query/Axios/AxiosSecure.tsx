@@ -20,7 +20,7 @@ axiosSecure.interceptors.response.use(
     if (error.response?.status === 401) {
       try {
         
-        await axiosSecure.post("/logout");
+        // await axiosSecure.post("/logout");
 
         toast.error("Session expired. Please log in again.");
 

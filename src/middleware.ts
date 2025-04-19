@@ -42,8 +42,6 @@ export async function middleware(request: NextRequest) {
       const allowedRoles = protectedRoutes[route as keyof typeof protectedRoutes]
       if (!allowedRoles.includes(role)) {
         const unauthorizedUrl = new URL('/unauthorized', request.url)
-        unauthorizedUrl.searchParams.set('message', `Your ${role} account  cannot access ${route}`)
-        unauthorizedUrl.searchParams.set('from', path)
         return NextResponse.redirect(unauthorizedUrl)
       }
     }
