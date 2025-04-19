@@ -100,3 +100,58 @@ interface SearchParams {
     page?: string;
     limit?: string;
   };
+
+interface OrderItem {
+    medicine: string;
+    quantity: number;
+    price: number;
+    itemTotal: number;
+  }
+  
+  interface DeliveryAddress {
+    street: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  }
+  
+  interface OrderData {
+    _id?: string;
+    user: string;
+    items: OrderItem[];
+    deliveryAddress: DeliveryAddress;
+    paymentMethod: string;
+    prescription?: any;
+    totalPrice: number;
+  }
+
+  interface IOrder {
+    user: Types.ObjectId;
+    items: {
+        medicine: Types.ObjectId;
+        quantity: number;
+        price: number;
+    }[];
+    totalPrice: number;
+    status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+    paymentStatus: "pending" | "paid" | "failed";
+    paymentMethod: "COD" | "Credit Card" | "Debit Card" | "UPI" | "PayPal";
+    deliveryAddress: {
+        street: string;
+        city: string;
+        state: string;
+        postalCode: string;
+        country: string;
+    };
+    prescription?: {
+        url: string;
+        publicId: string;
+    };
+
+    transactionId?: string; 
+    paymentDetails?: any;
+
+    createdAt?: Date;
+    updatedAt?: Date;
+}
