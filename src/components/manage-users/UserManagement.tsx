@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Eye, ShoppingCart } from "lucide-react";
 import { useGetAllUsers } from "@/React-Query/Queries/authQueries";
-import { PaginationControls } from "./PaginationControls";
+import { PaginationControls } from "../shared/PaginationControls";
 import UserDetailsDialog from "./UserDetailsDialog";
 import OrderHistoryDialog from "./OrderHistoryDialog";
 
@@ -96,8 +96,8 @@ export default function UserManagement() {
                     <TableCell>
                       <span
                         className={`px-2 py-1 rounded-full text-xs ${user.role === "admin"
-                            ? "bg-purple-100 text-purple-800"
-                            : "bg-blue-100 text-blue-800"
+                          ? "bg-purple-100 text-purple-800"
+                          : "bg-blue-100 text-blue-800"
                           }`}
                       >
                         {user.role}

@@ -8,17 +8,17 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import { Pencil, Search, Trash2 } from "lucide-react";
 import EditMedicineDialog from "./edit-medicine";
 import DeleteMedicineDialog from "./delete-medicine-dialog";
 import { useGetAllMedicines } from "@/React-Query/Queries/medicineQueries";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import AddMedicineDialog from "./add-medicine-dialog";
 import { useState } from "react";
-import { PaginationControls } from "./PaginationControls";
-import { Skeleton } from "./ui/skeleton";
+import { PaginationControls } from "../shared/PaginationControls";
+import { Skeleton } from "../ui/skeleton";
 
 export default function MedicineTable() {
     const [search, setSearch] = useState<string>("");

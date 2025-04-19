@@ -1,11 +1,12 @@
 'use client';
 import Link from "next/link";
-import { ShoppingCart, User } from "lucide-react";
+import { User } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 import { ModeToggle } from "../ThemeToggler";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import CartIcon from "./cartIcon";
 
 
 const Navbar = () => {
@@ -35,7 +36,7 @@ const Navbar = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link href="/products" className="text-gray-700 hover:text-blue-500 transition">
+                        <Link href="/shop" className="text-gray-700 hover:text-blue-500 transition">
                             Products
                         </Link>
                     </li>
@@ -48,12 +49,9 @@ const Navbar = () => {
 
 
                 <div className="flex items-center space-x-4">
-                    <Link href="/cart" className="relative">
-                        <ShoppingCart className="w-6 h-6 text-gray-700 hover:text-blue-600 transition" />
-                        <span className="absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
-                            0
-                        </span>
-                    </Link>
+
+                    <CartIcon />
+
                     <Link
                         href="/dashboard"
                         className={cn(

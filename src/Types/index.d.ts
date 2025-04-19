@@ -90,3 +90,13 @@ interface IMedicine {
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+interface SearchParams {
+    search?: string;
+    category?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    requiredPrescription?: string;
+    page?: string;
+    limit?: string;
+  };

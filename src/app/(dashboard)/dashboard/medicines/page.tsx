@@ -1,4 +1,4 @@
-import MedicineTable from "@/components/medicine-table";
+import MedicineTable from "@/components/manage-madicine/medicine-table";
 
 export default async function MedicinePage() {
 
