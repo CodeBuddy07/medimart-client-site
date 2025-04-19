@@ -2,15 +2,14 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 
 export default function UnauthorizedPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const message = searchParams.get('message') || 'You are not authorized to access this page'
+  const message = 'You are not authorized to access this page'
 
   useEffect(() => {
     const timer = setTimeout(() => {
