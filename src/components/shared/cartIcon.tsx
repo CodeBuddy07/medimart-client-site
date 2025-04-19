@@ -19,10 +19,6 @@ export default function CartIcon() {
         version 
     } = useCartStore();
 
-    
-
-    console.log(`Cart Icon Rendered - Version: ${version}`, totalItems, totalPrice); 
-
 
     return (
         <Sheet>

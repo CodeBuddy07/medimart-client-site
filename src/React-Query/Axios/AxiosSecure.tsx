@@ -1,7 +1,6 @@
 "use client";
 
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 
@@ -9,11 +8,10 @@ import { toast } from "sonner";
 
 
 const axiosSecure = axios.create({
-  baseURL: 'http://localhost:5000/api',
-  //baseURL: '', // Base URL of deployed server
+  //baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://medimart-server-site.vercel.app/api', // Base URL of deployed server
   withCredentials: true, 
 });
-
 
 
 axiosSecure.interceptors.response.use(
@@ -24,11 +22,13 @@ axiosSecure.interceptors.response.use(
         
         await axiosSecure.post("/logout");
 
-        
         toast.error("Session expired. Please log in again.");
 
-        const router = useRouter();
-        router.push('/log-in');
+
+
+        window.location.href = '/log-in';
+
+
 
       } catch (logoutError) {
         console.error("Logout error:", logoutError);

@@ -19,7 +19,12 @@ export const useLogin = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
       toast.success('Login successful!');
-      router.push(data.role === 'admin' ? '/dashboard' : '/');
+
+      setTimeout(() => {
+        router.push(data.role === 'admin' ? '/dashboard' : '/');
+      }
+        , 1000);
+
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Login failed');
@@ -34,7 +39,7 @@ export const useRegister = () => {
   return useMutation({
     mutationFn: async (data: RegisterData) => {
       const formData = new FormData();
-      
+
 
       formData.append('name', data.name);
       formData.append('email', data.email);
@@ -113,8 +118,8 @@ export const useUpdateUser = () => {
 
 
 export const useGetAllUsers = (
-  search: string = '', 
-  page: number = 1, 
+  search: string = '',
+  page: number = 1,
   limit: number = 10,
   enabled: boolean = true
 ) => {
@@ -122,16 +127,16 @@ export const useGetAllUsers = (
     queryKey: ['users', search, page, limit],
     queryFn: async () => {
       const response = await axiosSecure.get('/', {
-        params: { 
-          search, 
-          page, 
-          limit 
+        params: {
+          search,
+          page,
+          limit
         },
       });
-      return response.data.data; 
+      return response.data.data;
     },
     enabled,
-    staleTime: 1000 * 60 * 5, 
+    staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -140,9 +145,9 @@ export const useGetMe = () => {
     queryKey: ['currentUser'],
     queryFn: async () => {
       const response = await axiosSecure.get('/me');
-      return response.data.data; 
+      return response.data.data;
     },
-    staleTime: 1000 * 60 * 5, 
+    staleTime: 1000 * 60 * 5,
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 401) return false;
       return failureCount < 3;

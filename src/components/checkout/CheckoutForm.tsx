@@ -45,7 +45,7 @@ export default function CheckoutForm() {
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         const orderData = {
-            user: user.data?._id,
+            user: user?.data?._id,
             items: cart.map(item => ({
                 medicine: item._id,
                 quantity: item.quantity,

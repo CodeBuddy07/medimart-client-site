@@ -5,8 +5,12 @@ import { jwtVerify } from 'jose'
 
 export async function middleware(request: NextRequest) {
   try {
+
     const token = request.cookies.get('accessToken')?.value
+
     const secret = new TextEncoder().encode(process.env.SECRET!)
+
+    console.log(request.cookies); // Log the token for debugging
 
     let role = "guest"
 
@@ -38,7 +42,7 @@ export async function middleware(request: NextRequest) {
       const allowedRoles = protectedRoutes[route as keyof typeof protectedRoutes]
       if (!allowedRoles.includes(role)) {
         const unauthorizedUrl = new URL('/unauthorized', request.url)
-        unauthorizedUrl.searchParams.set('message', `Your ${role} account cannot access ${route}`)
+        unauthorizedUrl.searchParams.set('message', `Your ${role} account  cannot access ${route}`)
         unauthorizedUrl.searchParams.set('from', path)
         return NextResponse.redirect(unauthorizedUrl)
       }
