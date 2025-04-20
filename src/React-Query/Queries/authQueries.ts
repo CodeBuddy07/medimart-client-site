@@ -92,12 +92,18 @@ export const useLogout = () => {
       return response.data;
     },
     onSuccess: () => {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       queryClient.clear();
       toast('Logged out successfully', { icon: '👋' });
       router.push('/log-in');
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Logout failed');
+    onError: () => {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      queryClient.clear();
+      toast('Logged out successfully', { icon: '👋' });
+      router.push('/log-in');
     },
   });
 };
