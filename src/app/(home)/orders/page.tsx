@@ -67,7 +67,7 @@ export default function OrdersPage() {
       case 'paid':
         return <Badge className="bg-green-500">Paid</Badge>;
       case 'failed':
-        return <Badge variant="destructive">Failed</Badge>;
+        return <Badge className='text-white' variant="destructive">Failed</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }

@@ -80,7 +80,7 @@ export default function ManageOrdersPage() {
     }
 
     if (user?.role !== 'admin') {
-        return null; // Redirect happens in useEffect
+        return null; 
     }
 
     const getStatusBadge = (status: string) => {
@@ -94,7 +94,7 @@ export default function ManageOrdersPage() {
             case 'delivered':
                 return <Badge className="bg-green-500">Delivered</Badge>;
             case 'cancelled':
-                return <Badge variant="destructive">Cancelled</Badge>;
+                return <Badge className='text-white' variant="destructive">Cancelled</Badge>;
             default:
                 return <Badge variant="outline">{status}</Badge>;
         }
