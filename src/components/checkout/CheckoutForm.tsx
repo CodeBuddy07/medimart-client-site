@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { useCartStore } from '@/app/stores/cart-store';
 import { useCreateOrder } from '@/React-Query/Queries/orderQueries';
 import { useGetMe } from '@/React-Query/Queries/authQueries';
+import { useEffect, useState } from 'react';
 
 const formSchema = z.object({
     street: z.string().min(1, 'Street is required'),
@@ -20,15 +21,26 @@ const formSchema = z.object({
     postalCode: z.string().min(1, 'Postal code is required'),
     country: z.string().min(1, 'Country is required'),
     paymentMethod: z.enum(['cash-on-delivery', 'online']),
+    prescription: z.any().optional()
+}).superRefine((data, ctx) => {
+    const needsPrescription = useCartStore.getState().cart.some(item => item.requiredPrescription);
+    if (needsPrescription && !data.prescription) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Prescription is required for items in your cart",
+            path: ["prescription"]
+        });
+    }
 });
 
 export default function CheckoutForm() {
-    const { data: user } = useGetMe();
+    const { data: user, isLoading: userLoading } = useGetMe();
     const { cart, totalPrice, clearCart } = useCartStore();
-
-    console.log("cart :", cart);
     const router = useRouter();
     const { mutate: createOrder, isPending } = useCreateOrder();
+    const [prescriptionFile, setPrescriptionFile] = useState<File | null>(null);
+
+    const needsPrescription = cart.some(item => item.requiredPrescription);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -39,13 +51,25 @@ export default function CheckoutForm() {
             postalCode: '',
             country: '',
             paymentMethod: 'online',
+            prescription: undefined,
         },
     });
 
+    useEffect(() => {
+        if (!userLoading && user?.role !== 'customer') {
+            toast.error('Only customers can place orders');
+            router.push('/');
+        }
+    }, [user, userLoading, router]);
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        if (user?.role !== 'customer') {
+            toast.error('Only customers can place orders');
+            return;
+        }
+
         const orderData = {
-            user: user?.data?._id,
+            user: user?._id,
             items: cart.map(item => ({
                 medicine: item._id,
                 quantity: item.quantity,
@@ -61,11 +85,16 @@ export default function CheckoutForm() {
             },
             paymentMethod: values.paymentMethod,
             totalPrice,
+            prescription: prescriptionFile ? {
+                fileName: prescriptionFile.name,
+                fileType: prescriptionFile.type,
+                fileSize: prescriptionFile.size,
+               
+            } : undefined
         };
 
         createOrder(orderData, {
             onSuccess: (data) => {
-                console.log("jjj:", data);
                 if (data.data.paymentUrl) {
                     window.location.href = data.data.paymentUrl;
                 } else {
@@ -80,121 +109,208 @@ export default function CheckoutForm() {
         });
     }
 
-    return (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 mt-20">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Delivery Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="street"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Street</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="123 Main St" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <div className="grid grid-cols-2 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="city"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>City</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="New York" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="state"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>State</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="NY" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="postalCode"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Postal Code</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="10001" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="country"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Country</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="United States" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                           
-                            <Button type="submit" className="w-full" disabled={isPending}>
-                                {isPending ? 'Processing...' : 'Place Order'}
-                            </Button>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
+    if (userLoading) {
+        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    }
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Order Summary</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
-                        {cart.map((item) => (
-                            <div key={item._id} className="flex justify-between items-center">
-                                <div>
-                                    <h4 className="font-medium">{item.name}</h4>
-                                    <p className="text-sm text-muted-foreground">
-                                        {item.quantity} × ${item.price.toFixed(2)}
-                                    </p>
+    if (user?.role !== 'customer') {
+        return null;
+    }
+
+    return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+            
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                {/* Delivery Information Card */}
+                <Card className="shadow-lg">
+                    <CardHeader className="border-b">
+                        <CardTitle className="text-xl">Delivery Information</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                <div className="space-y-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="street"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Street Address</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="123 Main St" {...field} className="py-6" />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="city"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>City</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="New York" {...field} className="py-6" />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="state"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>State/Province</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="NY" {...field} className="py-6" />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="postalCode"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Postal Code</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="10001" {...field} className="py-6" />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="country"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Country</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="United States" {...field} className="py-6" />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    
+                                    {needsPrescription && (
+                                        <FormField
+                                            control={form.control}
+                                            name="prescription"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Prescription (Required for some items)</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="file"
+                                                            accept="image/*,.pdf"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files?.[0];
+                                                                if (file) {
+                                                                    setPrescriptionFile(file);
+                                                                    field.onChange(file.name);
+                                                                }
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                    <p className="text-sm text-muted-foreground mt-2">
+                                                        Upload a clear image or PDF of your prescription
+                                                    </p>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    )}
+                                    
+                                    <FormField
+                                        control={form.control}
+                                        name="paymentMethod"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Payment Method</FormLabel>
+                                                <FormControl>
+                                                    <select
+                                                        {...field}
+                                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                                    >
+                                                        <option value="online">Online Payment</option>
+                                                        <option value="cash-on-delivery">Cash on Delivery</option>
+                                                    </select>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                 </div>
-                                <p className="font-medium">
-                                    ${(item.quantity * item.price).toFixed(2)}
-                                </p>
+                                
+                                <Button 
+                                    type="submit" 
+                                    className="w-full py-6 text-lg" 
+                                    disabled={isPending}
+                                >
+                                    {isPending ? 'Processing...' : 'Place Order & Pay'}
+                                </Button>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+
+                {/* Order Summary Card */}
+                <Card className="shadow-lg h-fit sticky top-8">
+                    <CardHeader className="border-b">
+                        <CardTitle className="text-xl">Order Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                        <div className="space-y-6">
+                            <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+                                {cart.map((item) => (
+                                    <div key={item._id} className="flex justify-between items-start pb-4 border-b">
+                                        <div>
+                                            <h4 className="font-medium">{item.name}</h4>
+                                            {item.requiredPrescription && (
+                                                <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full mt-1">
+                                                    Requires prescription
+                                                </span>
+                                            )}
+                                            <p className="text-sm text-muted-foreground mt-1">
+                                                {item.quantity} × ${item.price.toFixed(2)}
+                                            </p>
+                                        </div>
+                                        <p className="font-medium">
+                                            ${(item.quantity * item.price).toFixed(2)}
+                                        </p>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                        <div className="border-t pt-4">
-                            <div className="flex justify-between font-bold text-lg">
-                                <span>Total</span>
-                                <span>${totalPrice.toFixed(2)}</span>
+                            
+                            <div className="space-y-2 border-t pt-4">
+                                <div className="flex justify-between">
+                                    <span>Subtotal</span>
+                                    <span>${totalPrice.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Shipping</span>
+                                    <span className="text-green-600">Free</span>
+                                </div>
+                                <div className="flex justify-between font-bold text-lg pt-2">
+                                    <span>Total</span>
+                                    <span>${totalPrice.toFixed(2)}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }

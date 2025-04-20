@@ -76,7 +76,7 @@ export default function ShopContent() {
                 </div>
 
                 {/* Products Section */}
-                <div className="md:w-3/4">
+                <div className="md:w-3/4 min-h-screen">
                     {isPending && page === 1 ? (
                         <div className="flex justify-center items-center h-64">
                             <div className="flex justify-center items-center">

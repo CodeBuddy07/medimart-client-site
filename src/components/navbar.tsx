@@ -77,14 +77,14 @@ export function DashboardNavbar() {
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuItem 
             className="flex items-center gap-2"
-            onClick={() => router.push('/dashboard/profile')}
+            onClick={() => router.push('/admin/profile')}
           >
             <User className="h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem 
             className="flex items-center gap-2"
-            onClick={() => router.push('/dashboard/settings')}
+            onClick={() => router.push('/admin/settings')}
           >
             <Settings className="h-4 w-4" />
             <span>Settings</span>

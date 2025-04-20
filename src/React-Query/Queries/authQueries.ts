@@ -17,11 +17,13 @@ export const useLogin = () => {
       return response.data;
     },
     onSuccess: (data) => {
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
       queryClient.invalidateQueries({ queryKey: ['user'] });
       toast.success('Login successful!');
 
       setTimeout(() => {
-        router.push(data.role === 'admin' ? '/dashboard' : '/');
+        router.push(data.role === 'admin' ? '/admin' : '/');
       }
         , 1000);
 
@@ -55,7 +57,9 @@ export const useRegister = () => {
       });
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
       toast.success('Registration successful!');
       router.push('/log-in');
     },

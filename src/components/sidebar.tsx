@@ -1,16 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { 
-  LayoutDashboard, 
-  Pill, 
-  ShoppingCart, 
-  Users, 
-  FileText, 
-  Settings,
-  ClipboardList,
+import {
+  LayoutDashboard,
+  Pill,
+  ShoppingCart,
+  Users,
+  FileText,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -19,23 +17,27 @@ import { useEffect, useState } from "react";
 import { useDashboardStore } from "./dashboard-store";
 
 export function DashboardSidebar() {
+  const router = useRouter();
   const pathname = usePathname();
-  const { data: user } = useGetMe();
+  const { data: user, isLoading } = useGetMe();
   const [isMobile, setIsMobile] = useState(false);
-  
-  const { 
-    isCollapsed, 
+
+  const {
+    isCollapsed,
     isMobileOpen,
-    toggleSidebar, 
-    closeSidebar, 
+    toggleSidebar,
+    closeSidebar,
     setIsMobileOpen
   } = useDashboardStore();
-  
+
+
+
   useEffect(() => {
+
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      
+
       if (!mobile) {
         setIsMobileOpen(false);
       }
@@ -44,7 +46,7 @@ export function DashboardSidebar() {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [setIsMobileOpen]);
+  }, [setIsMobileOpen, router, user]);
 
   useEffect(() => {
     if (isMobile) {
@@ -52,76 +54,54 @@ export function DashboardSidebar() {
     }
   }, [pathname, isMobile, closeSidebar]);
 
-  const adminNavItems = [
+  if (!isLoading && user.role !== "admin") {
+
+    router.push("/unauthorized")
+  }
+
+  const navItems = [
     {
-      href: "/dashboard",
+      href: "/admin",
       icon: LayoutDashboard,
       label: "Overview",
     },
     {
-      href: "/dashboard/medicines",
+      href: "/admin/medicines",
       icon: Pill,
       label: "Manage Medicines",
     },
     {
-      href: "/dashboard/orders",
+      href: "/admin/orders",
       icon: ShoppingCart,
       label: "Manage Orders",
-      subItems: [
-        { href: "/dashboard/orders/prescriptions", label: "Prescription Orders" }
-      ]
+
     },
     {
-      href: "/dashboard/users",
+      href: "/admin/users",
       icon: Users,
       label: "Manage Users"
     },
     {
-      href: "/dashboard/payments",
+      href: "/admin/payments",
       icon: FileText,
       label: "Manage Payments"
     },
   ];
 
-  const customerNavItems = [
-    {
-      href: "/dashboard",
-      icon: LayoutDashboard,
-      label: "Overview",
-    },
-    {
-      href: "/dashboard/orders",
-      icon: ShoppingCart,
-      label: "My Orders"
-    },
-    {
-      href: "/dashboard/prescriptions",
-      icon: ClipboardList,
-      label: "My Prescriptions"
-    },
-    {
-      href: "/dashboard/profile",
-      icon: Settings,
-      label: "Profile Settings",
-      subItems: [
-        { href: "/dashboard/profile/personal", label: "Personal Info" },
-        { href: "/dashboard/profile/address", label: "Addresses" }
-      ]
-    },
-  ];
 
-  const navItems = user?.role === "admin" ? adminNavItems : customerNavItems;
+
+
 
   return (
     <>
       {isMobile && isMobileOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={closeSidebar}
         />
       )}
 
-      <aside 
+      <aside
         className={cn(
           "border-r bg-muted h-screen fixed md:relative z-50 transition-all duration-300",
           isMobile ? "left-0 top-0" : "",
@@ -140,7 +120,7 @@ export function DashboardSidebar() {
                   <span className="text-xl">MediMart</span>
                 </Link>
               )}
-              <button 
+              <button
                 onClick={toggleSidebar}
                 className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-muted"
               >
@@ -148,7 +128,7 @@ export function DashboardSidebar() {
               </button>
             </div>
           )}
-          
+
           <div className="flex-1 p-2 overflow-y-auto">
             <nav className="grid items-start gap-1">
               {navItems.map((item) => (
@@ -165,28 +145,12 @@ export function DashboardSidebar() {
                     <item.icon className="h-4 w-4" />
                     {(!isCollapsed || isMobile) && item.label}
                   </Link>
-                  
-                  {item.subItems && pathname.startsWith(item.href) && (!isCollapsed || isMobile) && (
-                    <div className="ml-8 mt-1 space-y-1">
-                      {item.subItems.map((subItem) => (
-                        <Link
-                          key={subItem.href}
-                          href={subItem.href}
-                          className={cn(
-                            "flex items-center gap-2 rounded-lg px-2 py-1 text-xs text-muted-foreground hover:text-primary",
-                            pathname === subItem.href && "text-primary font-medium"
-                          )}
-                        >
-                          • {subItem.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+
                 </div>
               ))}
             </nav>
           </div>
-          
+
           <div className={cn(
             "p-4 border-t flex items-center gap-3",
             isCollapsed && !isMobile ? "justify-center" : ""

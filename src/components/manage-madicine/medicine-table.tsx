@@ -86,7 +86,7 @@ export default function MedicineTable() {
                                     </TableCell>
                                     <TableCell>
                                         {medicine.requiredPrescription ? (
-                                            <Badge variant="destructive">Required</Badge>
+                                            <Badge className="text-white" variant="destructive">Required</Badge>
                                         ) : (
                                             <Badge variant="secondary">Not Required</Badge>
                                         )}

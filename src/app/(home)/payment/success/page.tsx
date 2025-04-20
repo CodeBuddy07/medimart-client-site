@@ -4,12 +4,18 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { CheckCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useCartStore } from '@/app/stores/cart-store'
 
 export default function PaymentSuccessPage() {
-  const router = useRouter()
+  const router = useRouter();
+
+  const {clearCart} = useCartStore();
 
   useEffect(() => {
+    clearCart();
+    
     const timer = setTimeout(() => {
+      
       router.push('/')
     }, 5000)
 
