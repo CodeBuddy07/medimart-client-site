@@ -14,11 +14,11 @@ export default function DashboardLayout({
     <div className="flex min-h-screen">
       <DashboardSidebar />
       
-      <div className="flex flex-col w-full transition-all duration-300">
+      <div className="flex flex-col w-full transition-all duration-300 h-screen">
         <DashboardNavbar />
         
         <main className="flex-1 p-4 md:p-6 overflow-auto bg-gray-50">
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-7xl ">
             {children}
           </div>
         </main>

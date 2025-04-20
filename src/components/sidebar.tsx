@@ -97,7 +97,7 @@ export function DashboardSidebar() {
 
       <aside
         className={cn(
-          "border-r bg-muted h-screen fixed md:relative z-50 transition-all duration-300",
+          "border-r bg-muted min-h-screen fixed md:relative z-50 transition-all duration-300",
           isMobile ? "left-0 top-0" : "",
           isMobile ? (isMobileOpen ? "translate-x-0" : "-translate-x-full") : "",
           isCollapsed ? "w-20" : "w-64"
