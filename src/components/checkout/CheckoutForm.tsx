@@ -86,7 +86,7 @@ export default function CheckoutForm() {
                 postalCode: values.postalCode,
                 country: values.country,
             },
-            paymentMethod: values.paymentMethod,
+            paymentMethod: 'online',
             totalPrice,
             prescription: prescriptionFile
         };
