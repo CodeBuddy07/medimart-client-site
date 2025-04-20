@@ -54,7 +54,7 @@ export default function OrdersPage() {
       case 'delivered':
         return <Badge className="bg-green-500">Delivered</Badge>;
       case 'cancelled':
-        return <Badge variant="destructive">Cancelled</Badge>;
+        return <Badge className='text-white' variant="destructive">Cancelled</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
