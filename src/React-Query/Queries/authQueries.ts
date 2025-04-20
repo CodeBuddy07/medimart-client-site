@@ -113,7 +113,7 @@ export const useUpdateUser = () => {
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateData }) => {
-      const response = await axiosSecure.patch(`/update/${id}`, data);
+      const response = await axiosSecure.post(`/update/${id}`, data);
       return response.data;
     },
     onSuccess: (data) => {

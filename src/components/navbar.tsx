@@ -8,15 +8,13 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, LogOut, Settings, User, Menu } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Loader2, LogOut, Menu } from "lucide-react";
 import { useGetMe, useLogout } from "@/React-Query/Queries/authQueries";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useDashboardStore } from "./dashboard-store";
 
 export function DashboardNavbar() {
-  const router = useRouter();
   const { data: user } = useGetMe();
   const { mutate: logOut, isPending } = useLogout();
   const { isCollapsed, setIsMobileOpen, isMobileOpen } = useDashboardStore();
@@ -75,20 +73,6 @@ export function DashboardNavbar() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuItem 
-            className="flex items-center gap-2"
-            onClick={() => router.push('/admin/profile')}
-          >
-            <User className="h-4 w-4" />
-            <span>Profile</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem 
-            className="flex items-center gap-2"
-            onClick={() => router.push('/admin/settings')}
-          >
-            <Settings className="h-4 w-4" />
-            <span>Settings</span>
-          </DropdownMenuItem>
           <DropdownMenuItem 
             className="flex items-center gap-2 text-red-600"
             onClick={handleLogout}

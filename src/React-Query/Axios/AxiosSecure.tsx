@@ -4,8 +4,8 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const axiosSecure = axios.create({
-  //baseURL: 'http://localhost:5000/api',
-  baseURL: "https://medimart-server-site.vercel.app/api", // Deployed API URL
+  baseURL: 'http://localhost:5000/api',
+  //baseURL: "https://medimart-server-site.vercel.app/api", // Deployed API URL
   withCredentials: true,
 });
 

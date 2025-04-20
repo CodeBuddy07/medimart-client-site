@@ -136,7 +136,7 @@ interface OrderItem {
     totalPrice: number;
     status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
     paymentStatus: "pending" | "paid" | "failed";
-    paymentMethod: "COD" | "Credit Card" | "Debit Card" | "UPI" | "PayPal";
+    paymentMethod: string;
     deliveryAddress: {
         street: string;
         city: string;

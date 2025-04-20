@@ -8,7 +8,6 @@ import {
   Pill,
   ShoppingCart,
   Users,
-  FileText,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -80,11 +79,6 @@ export function DashboardSidebar() {
       href: "/admin/users",
       icon: Users,
       label: "Manage Users"
-    },
-    {
-      href: "/admin/payments",
-      icon: FileText,
-      label: "Manage Payments"
     },
   ];
 

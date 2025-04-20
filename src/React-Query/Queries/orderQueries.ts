@@ -72,7 +72,7 @@ export const useUpdateOrderStatus = () => {
 
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const response = await axiosSecure.patch(`/order/${id}`, { status });
+      const response = await axiosSecure.put(`/order/${id}`, { status });
       return response.data;
     },
     onSuccess: () => {
