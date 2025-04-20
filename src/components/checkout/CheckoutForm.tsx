@@ -55,8 +55,11 @@ export default function CheckoutForm() {
         },
     });
 
+    
+
     useEffect(() => {
         if (!userLoading && user?.role !== 'customer') {
+            console.log("Role in Checkout:", user, user.role);
             toast.error('Only customers can place orders');
             router.push('/');
         }
