@@ -1,14 +1,24 @@
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
-  const body = await req.json()
-  console.log('✅ SSLCommerz Payment Success Data:', body)
+  const rawBody = await req.text()
+  const params = new URLSearchParams(rawBody)
 
-  // You can process the data here (e.g., save to DB)
+  const tran_id = params.get('tran_id')
+  const val_id = params.get('val_id')
+  const amount = params.get('amount')
+  const status = params.get('status')
 
-  // Redirect to frontend success page
-  return NextResponse.redirect(new URL('/payment/success', req.url))
+  console.log('✅ Payment Data:', { tran_id, val_id, amount, status })
+
+  // You can save this data to DB here_https://medimart-client-site.vercel.app
+
+  const redirectUrl = new URL('https://medimart-client-site.vercel.app/payment/success')
+  return NextResponse.redirect(redirectUrl)
 }
+
+
+
 
 export async function GET() {
     return NextResponse.json({

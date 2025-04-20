@@ -88,12 +88,7 @@ export default function CheckoutForm() {
             },
             paymentMethod: values.paymentMethod,
             totalPrice,
-            prescription: prescriptionFile ? {
-                fileName: prescriptionFile.name,
-                fileType: prescriptionFile.type,
-                fileSize: prescriptionFile.size,
-               
-            } : undefined
+            prescription: prescriptionFile
         };
 
         createOrder(orderData, {
