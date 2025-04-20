@@ -13,8 +13,7 @@ export async function POST(req: Request) {
 
   // You can save this data to DB here_https://medimart-client-site.vercel.app
 
-  const redirectUrl = new URL('https://medimart-client-site.vercel.app/payment/success')
-  return NextResponse.redirect(redirectUrl)
+  return NextResponse.redirect('https://medimart-client-site.vercel.app/payment/success')
 }
 
 

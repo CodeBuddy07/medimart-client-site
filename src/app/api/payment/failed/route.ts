@@ -12,9 +12,7 @@ export async function POST(req: Request) {
   console.log('✅ Payment Data:', { tran_id, val_id, amount, status })
 
   // You can save this data to DB here_https://medimart-client-site.vercel.app
-
-  const redirectUrl = new URL('https://medimart-client-site.vercel.app/payment/failed')
-  return NextResponse.redirect(redirectUrl)
+  return NextResponse.redirect('https://medimart-client-site.vercel.app/payment/failed')
 }
 
 export async function GET() {
