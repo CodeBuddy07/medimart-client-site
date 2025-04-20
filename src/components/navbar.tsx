@@ -65,7 +65,7 @@ export function DashboardNavbar() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.image.url} alt={user?.name} />
+              <AvatarImage src={user?.image} alt={user?.name} />
               <AvatarFallback>
                 {user?.name?.charAt(0).toUpperCase()}
               </AvatarFallback>
