@@ -47,6 +47,8 @@ export const useCreateOrder = () => {
         formData.append('prescription', data.prescription);
       }
 
+      console.log(data.prescription);
+
       const response = await axiosSecure.post('/order/initiate', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

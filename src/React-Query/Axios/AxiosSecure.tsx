@@ -26,8 +26,9 @@ axiosSecure.interceptors.response.use(
   (response) => response,
   async (error) => {
     const status = error?.response?.status;
+    const message = error?.response?.data?.message;
 
-    if (status === 401) {
+    if (status === 401 || message === 'jwt expired') {
       try {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
