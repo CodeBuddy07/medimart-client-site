@@ -12,7 +12,6 @@ import { Loader2, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import { useRegister } from "@/React-Query/Queries/authQueries";
 
-
 type RegisterData = {
   name: string;
   email: string;
@@ -43,32 +42,31 @@ export function RegisterForm({
   };
 
   const onSubmit = (data: RegisterData) => {
-
     let formData = { ...data }; ;
     if (fileInputRef.current && fileInputRef.current.files) {
       formData = { ...formData, Image: fileInputRef.current.files[0] };
     }
     registerUser(formData);
-};
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden bg-white dark:bg-gray-800">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-bold">Create an account</h1>
-                <p className="text-balance text-muted-foreground">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create an account</h1>
+                <p className="text-balance text-muted-foreground dark:text-gray-400">
                   Sign up to get started
                 </p>
               </div>
 
               {/* Image Upload Field */}
               <div className="grid gap-2">
-                <Label htmlFor="Image">Profile Image</Label>
+                <Label htmlFor="Image" className="text-gray-900 dark:text-white">Profile Image</Label>
                 <div className="flex items-center gap-4">
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden border">
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden border dark:border-gray-600">
                     {previewImage ? (
                       <Image
                         src={previewImage}
@@ -77,8 +75,8 @@ export function RegisterForm({
                         className="object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                        <UploadCloud className="h-6 w-6 text-gray-400" />
+                      <div className="w-full h-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                        <UploadCloud className="h-6 w-6 text-gray-400 dark:text-gray-500" />
                       </div>
                     )}
                   </div>
@@ -87,6 +85,7 @@ export function RegisterForm({
                     variant="outline"
                     size="sm"
                     onClick={() => fileInputRef.current?.click()}
+                    className="text-gray-900 dark:text-white border-gray-300 dark:border-gray-500 hover:border-gray-500 dark:hover:border-gray-400"
                   >
                     Upload
                   </Button>
@@ -102,12 +101,14 @@ export function RegisterForm({
                 </div>
               </div>
 
+              {/* Form Fields */}
               <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name" className="text-gray-900 dark:text-white">Name</Label>
                 <Input
                   id="name"
                   placeholder="John Doe"
                   {...register("name", { required: "Name is required" })}
+                  className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
                 {errors.name && (
                   <p className="text-sm text-red-500">{errors.name.message}</p>
@@ -115,7 +116,7 @@ export function RegisterForm({
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-gray-900 dark:text-white">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -127,6 +128,7 @@ export function RegisterForm({
                       message: "Invalid email address"
                     }
                   })}
+                  className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
                 {errors.email && (
                   <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -134,7 +136,7 @@ export function RegisterForm({
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-gray-900 dark:text-white">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -145,6 +147,7 @@ export function RegisterForm({
                       message: "Password must be at least 6 characters"
                     }
                   })}
+                  className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
                 {errors.password && (
                   <p className="text-sm text-red-500">{errors.password.message}</p>
@@ -152,12 +155,13 @@ export function RegisterForm({
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="phone" className="text-gray-900 dark:text-white">Phone</Label>
                 <Input
                   id="phone"
                   type="tel"
                   placeholder="+8801XXXXXXXXX"
                   {...register("phone", { required: "Phone is required" })}
+                  className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
                 {errors.phone && (
                   <p className="text-sm text-red-500">{errors.phone.message}</p>
@@ -165,12 +169,13 @@ export function RegisterForm({
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="address">Address</Label>
+                <Label htmlFor="address" className="text-gray-900 dark:text-white">Address</Label>
                 <Input
                   id="address"
                   type="text"
                   placeholder="123 Street, City"
                   {...register("address", { required: "Address is required" })}
+                  className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
                 {errors.address && (
                   <p className="text-sm text-red-500">{errors.address.message}</p>
@@ -186,7 +191,7 @@ export function RegisterForm({
 
               <div className="text-center text-sm">
                 Already have an account?{" "}
-                <Link href="/log-in" className="underline underline-offset-4">
+                <Link href="/log-in" className="underline underline-offset-4 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-500">
                   Login
                 </Link>
               </div>
@@ -197,14 +202,14 @@ export function RegisterForm({
               src="/log-inForm.png"
               fill
               alt="Register illustration"
-              className="object-cover dark:brightness-[0.2] dark:grayscale"
+              className="object-cover"
               priority
             />
           </div>
         </CardContent>
       </Card>
 
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
+      <div className="text-balance text-center text-xs text-muted-foreground dark:text-gray-400 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
         By clicking register, you agree to our{" "}
         <a href="#" className="hover:text-primary">Terms of Service</a> and{" "}
         <a href="#" className="hover:text-primary">Privacy Policy</a>.

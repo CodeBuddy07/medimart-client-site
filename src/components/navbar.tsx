@@ -1,11 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, LogOut, Menu } from "lucide-react";
@@ -30,7 +30,7 @@ export function DashboardNavbar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleLogout = () => { 
+  const handleLogout = () => {
     logOut();
   };
 
@@ -42,12 +42,13 @@ export function DashboardNavbar() {
     <header className={cn(
       "flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6",
       !isMobile && (isCollapsed ? "md:ml-0" : "md:ml-0"),
-      "transition-all duration-300"
+      "transition-all duration-300",
+      "dark:bg-gray-800 dark:border-gray-700 dark:text-white" // Dark mode styles
     )}>
       {isMobile && (
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           className="md:hidden"
           onClick={toggleMobileMenu}
         >
@@ -63,17 +64,28 @@ export function DashboardNavbar() {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Button
+            variant="ghost"
+            className={cn(
+              "relative h-8 w-8 rounded-full",
+              "dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white" // Dark mode styles for the button
+            )}
+          >
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.image} alt={user?.name} />
-              <AvatarFallback>
+              <AvatarImage
+                src={user?.image}
+                alt={user?.name}
+                className="dark:border-gray-600" // Optional: Dark border for AvatarImage
+              />
+              <AvatarFallback className="dark:text-white">
                 {user?.name?.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
           </Button>
+
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuItem 
+          <DropdownMenuItem
             className="flex items-center gap-2 text-red-600"
             onClick={handleLogout}
             disabled={isPending}

@@ -8,17 +8,17 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardLayout({
-  children
+  children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen dark:bg-gray-900 dark:text-white">
       <DashboardSidebar />
       
       <div className="flex flex-col w-full transition-all duration-300 h-screen">
         <DashboardNavbar />
         
-        <main className="flex-1 p-4 md:p-6 overflow-auto bg-gray-50">
-          <div className="mx-auto max-w-7xl ">
+        <main className="flex-1 p-4 md:p-6 overflow-auto bg-gray-50 dark:bg-gray-900">
+          <div className="mx-auto max-w-7xl">
             {children}
           </div>
         </main>

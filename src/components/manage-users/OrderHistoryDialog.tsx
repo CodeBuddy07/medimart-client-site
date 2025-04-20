@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import axiosSecure from "@/React-Query/Axios/AxiosSecure";
+import { AlertCircle } from "lucide-react";
 
 interface OrderHistoryDialogProps {
   userId: string;
@@ -32,7 +34,7 @@ const paymentStatusColors = {
 };
 
 export default function OrderHistoryDialog({ userId, onClose }: OrderHistoryDialogProps) {
-  const { data: orders, isLoading, isError } = useQuery({
+  const { data: orders, isLoading, isError, error } = useQuery({
     queryKey: ["userOrders", userId],
     queryFn: async () => {
       const response = await axiosSecure.get(`/order/user/${userId}`);
@@ -46,7 +48,7 @@ export default function OrderHistoryDialog({ userId, onClose }: OrderHistoryDial
         <DialogHeader>
           <DialogTitle>Order History</DialogTitle>
         </DialogHeader>
-        
+
         <div className="rounded-md border">
           <Table>
             <TableHeader>
@@ -73,7 +75,14 @@ export default function OrderHistoryDialog({ userId, onClose }: OrderHistoryDial
               ) : isError ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-red-500 py-4">
-                    Error loading orders
+                    {(error as any)?.response?.data?.message === "No orders found for this user" ? (
+                      <div className="flex justify-center items-center gap-2">
+                        <AlertCircle className="text-yellow-500" />
+                        <span>No orders yet</span>
+                      </div>
+                    ) : (
+                      <span>{(error as any)?.response?.data?.message || "Getting Error While fetching"}</span>
+                    )}
                   </TableCell>
                 </TableRow>
               ) : orders?.length ? (
@@ -109,7 +118,7 @@ export default function OrderHistoryDialog({ userId, onClose }: OrderHistoryDial
             </TableBody>
           </Table>
         </div>
-        
+
         <div className="mt-4 flex justify-end">
           <Button onClick={onClose}>Close</Button>
         </div>

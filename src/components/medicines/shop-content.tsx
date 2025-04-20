@@ -68,7 +68,7 @@ export default function ShopContent() {
     }, [search, category, minPrice, maxPrice, requiredPrescription])
 
     return (
-        <div className="container mx-auto px-4 py-8 mt-20">
+        <div className="container mx-auto px-4 py-8 pt-20">
             <div className="flex flex-col md:flex-row gap-8">
                 {/* Filters Section */}
                 <div className="md:w-1/4">
@@ -81,7 +81,7 @@ export default function ShopContent() {
                         <div className="flex justify-center items-center h-64">
                             <div className="flex justify-center items-center">
                                 <Loader2
-                                    className="animate-spin text-primary"
+                                    className="animate-spin text-primary dark:text-white"
                                     size={24}
                                 />
                             </div>
@@ -90,7 +90,7 @@ export default function ShopContent() {
                         <>
                             {medicines?.data && medicines.data?.length > 0 ? (
                                 <>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 dark:bg-gray-900">
                                         {medicines.data?.map((medicine: IMedicine) => (
                                             <MedicineCard key={medicine._id} medicine={medicine} />
                                         ))}
@@ -100,7 +100,7 @@ export default function ShopContent() {
                                         <div ref={ref} className="flex justify-center mt-8">
                                             <div className="flex justify-center items-center">
                                                 <Loader2
-                                                    className="animate-spin text-primary"
+                                                    className="animate-spin text-primary dark:text-white"
                                                     size={24}
                                                 />
                                             </div>
@@ -109,8 +109,10 @@ export default function ShopContent() {
                                 </>
                             ) : (
                                 <div className="text-center py-12">
-                                    <h3 className="text-lg font-medium text-gray-700">No medicines found</h3>
-                                    <p className="mt-2 text-gray-500">
+                                    <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">
+                                        No medicines found
+                                    </h3>
+                                    <p className="mt-2 text-gray-500 dark:text-gray-400">
                                         Try adjusting your search or filter criteria
                                     </p>
                                 </div>
@@ -120,5 +122,6 @@ export default function ShopContent() {
                 </div>
             </div>
         </div>
+
     )
 }

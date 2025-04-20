@@ -28,8 +28,6 @@ export function LoginForm({
     login(data);
   };
 
-
-
   const handleForgotPassword = () => {
     toast.custom((t) => (
       <div className="flex items-start gap-3 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-w-md">
@@ -63,23 +61,24 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden bg-white dark:bg-gray-800">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-bold">Welcome back</h1>
-                <p className="text-balance text-muted-foreground">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Welcome back</h1>
+                <p className="text-balance text-muted-foreground dark:text-gray-400">
                   Login to your dashboard account
                 </p>
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-gray-900 dark:text-gray-100">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  className="bg-white dark:bg-gray-700 dark:text-gray-200"
                   {...register("email", { 
                     required: "Email is required",
                     pattern: {
@@ -89,17 +88,17 @@ export function LoginForm({
                   })}
                 />
                 {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                  <p className="text-sm text-red-500 dark:text-red-400">{errors.email.message}</p>
                 )}
               </div>
 
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password" className="text-gray-900 dark:text-gray-100">Password</Label>
                   <button
                     type="button"
                     onClick={handleForgotPassword}
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
+                    className="ml-auto text-sm underline-offset-2 hover:underline text-blue-600 dark:text-blue-400"
                   >
                     Forgot your password?
                   </button>
@@ -107,6 +106,7 @@ export function LoginForm({
                 <Input 
                   id="password" 
                   type="password" 
+                  className="bg-white dark:bg-gray-700 dark:text-gray-200"
                   {...register("password", { 
                     required: "Password is required",
                     minLength: {
@@ -116,7 +116,7 @@ export function LoginForm({
                   })}
                 />
                 {errors.password && (
-                  <p className="text-sm text-red-500">{errors.password.message}</p>
+                  <p className="text-sm text-red-500 dark:text-red-400">{errors.password.message}</p>
                 )}
               </div>
 
@@ -127,9 +127,9 @@ export function LoginForm({
                 Login
               </Button>
               
-              <div className="text-center text-sm">
+              <div className="text-center text-sm text-gray-900 dark:text-gray-200">
                 Don&apos;t have an account?{" "}
-                <Link className="underline underline-offset-4" href="/sign-up">
+                <Link className="underline underline-offset-4 text-blue-600 dark:text-blue-400" href="/sign-up">
                   Sign Up
                 </Link>
               </div>
@@ -141,14 +141,14 @@ export function LoginForm({
               src="/log-inForm.png"
               fill
               alt="Login illustration"
-              className="object-cover dark:brightness-[0.2] dark:grayscale"
+              className="object-cover "
               priority
             />
           </div>
         </CardContent>
       </Card>
 
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
+      <div className="text-balance text-center text-xs text-muted-foreground dark:text-gray-300 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
         By clicking continue, you agree to our{" "}
         <a href="#" className="hover:text-primary">Terms of Service</a> and{" "}
         <a href="#" className="hover:text-primary">Privacy Policy</a>.

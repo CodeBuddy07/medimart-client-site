@@ -3,17 +3,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import axiosSecure from '../Axios/AxiosSecure';
+import axiosSecure, { CustomAxiosRequestConfig } from '../Axios/AxiosSecure';
 
 
 
-export const useLogin = () => {
+export const useLogin = (shouldRedirect = false) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: LoginData) => {
-      const response = await axiosSecure.post('/login', data);
+      const response = await axiosSecure.post('/login', data,{
+        ignoreAuthError: !shouldRedirect, // 👈 Dynamic behavior
+      } as CustomAxiosRequestConfig);
       return response.data;
     },
     onSuccess: (data) => {
@@ -29,6 +31,7 @@ export const useLogin = () => {
 
     },
     onError: (error: any) => {
+      console.log(error);
       toast.error(error.response?.data?.message || 'Login failed');
     },
   });
@@ -150,11 +153,13 @@ export const useGetAllUsers = (
   });
 };
 
-export const useGetMe = () => {
+export const useGetMe = (shouldRedirect = true) => {
   return useQuery({
     queryKey: ['currentUser'],
     queryFn: async () => {
-      const response = await axiosSecure.get('/me');
+      const response = await axiosSecure.get('/me',{
+        ignoreAuthError: !shouldRedirect, // 👈 Dynamic behavior
+      } as CustomAxiosRequestConfig);
       return response.data.data;
     },
     staleTime: 1000 * 60 * 5,

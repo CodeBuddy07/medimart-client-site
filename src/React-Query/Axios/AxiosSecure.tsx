@@ -2,6 +2,11 @@
 
 import axios from "axios";
 import { toast } from "sonner";
+import type { AxiosRequestConfig } from "axios";
+
+export interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+  ignoreAuthError?: boolean;
+}
 
 const axiosSecure = axios.create({
   //baseURL: 'http://localhost:5000/api',
@@ -22,13 +27,17 @@ axiosSecure.interceptors.request.use(
 );
 
 
+// Interceptor
 axiosSecure.interceptors.response.use(
   (response) => response,
   async (error) => {
     const status = error?.response?.status;
     const message = error?.response?.data?.message;
 
-    if (status === 401 || message === 'jwt expired') {
+    const config = error?.config as CustomAxiosRequestConfig; // 👈 Type assertion
+    const shouldIgnoreAuthError = config?.ignoreAuthError;
+
+    if ((status === 401 || message === "jwt expired") && !shouldIgnoreAuthError) {
       try {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
@@ -42,5 +51,6 @@ axiosSecure.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 export default axiosSecure;

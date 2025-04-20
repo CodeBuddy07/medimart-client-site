@@ -1,6 +1,5 @@
 'use client';
 
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useStatistics } from '@/React-Query/Queries/statisticsQuery';
 import { Loader2 } from 'lucide-react';
@@ -37,12 +36,12 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card>
+        <Card className="bg-white dark:bg-gray-800">
           <CardHeader>
             <CardTitle>Total Orders</CardTitle>
           </CardHeader>
@@ -51,7 +50,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-gray-800">
           <CardHeader>
             <CardTitle>Total Revenue</CardTitle>
           </CardHeader>
@@ -62,7 +61,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-gray-800">
           <CardHeader>
             <CardTitle>Avg. Order Value</CardTitle>
           </CardHeader>
@@ -73,7 +72,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-gray-800">
           <CardHeader>
             <CardTitle>Medicines</CardTitle>
           </CardHeader>
@@ -87,7 +86,7 @@ export default function DashboardPage() {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <Card>
+        <Card className="bg-white dark:bg-gray-800">
           <CardHeader>
             <CardTitle>Orders by Status</CardTitle>
           </CardHeader>
@@ -106,7 +105,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-gray-800">
           <CardHeader>
             <CardTitle>Payment Status</CardTitle>
           </CardHeader>
@@ -136,7 +135,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Top Selling Medicines */}
-      <Card className="mb-8">
+      <Card className="mb-8 bg-white dark:bg-gray-800">
         <CardHeader>
           <CardTitle>Top Selling Medicines</CardTitle>
         </CardHeader>
@@ -156,7 +155,7 @@ export default function DashboardPage() {
                   </div>
                 )}
                 <h3 className="font-medium">{medicine.name}</h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Sold: {medicine.totalQuantity}
                 </p>
                 <p className="text-sm font-medium">
@@ -169,7 +168,7 @@ export default function DashboardPage() {
       </Card>
 
       {/* Recent Orders */}
-      <Card>
+      <Card className="bg-white dark:bg-gray-800">
         <CardHeader>
           <CardTitle>Recent Orders</CardTitle>
         </CardHeader>
@@ -180,7 +179,7 @@ export default function DashboardPage() {
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="font-medium">Order #{order._id.toString().slice(-6).toUpperCase()}</p>
-                    <p className="text-sm text-gray-600">{order.user.name}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{order.user.name}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-medium">${order.totalPrice.toFixed(2)}</p>
