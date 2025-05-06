@@ -5,38 +5,38 @@ import { Button } from '@/components/ui/button';
 import { useGetAllMedicines } from '@/React-Query/Queries/medicineQueries';
 import { Loader2 } from 'lucide-react';
 import MedicineCard from '../medicines/medicineCard';
+import Title from '../shared/title';
 
 
 export default function FeaturedProducts() {
 
-  const { data: medicines, isPending } = useGetAllMedicines({ 
+  const { data: medicines, isPending } = useGetAllMedicines({
     limit: 4,
     page: 1
   });
 
   return (
-    <section className="py-16 bg-gray-50 dark:bg-gray-900">
+    <section className="py-32 bg-slate-100 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Featured Medical Products</h2>
-          <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-            Discover our selection of high-quality medical equipment and supplies chosen by healthcare professionals.
-          </p>
-        </div>
-        
+
+        <Title 
+          title='Featured Medical Products'
+          desc='Discover our selection of high-quality medical equipment and supplies chosen by healthcare professionals.'
+        />
+
         {/* Loading indicator */}
         {isPending && (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-indigo-600 dark:text-indigo-400" />
           </div>
         )}
-        
+
         {/* Products grid */}
         {!isPending && (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-20">
               {medicines?.data && medicines.data.length > 0 ? (
-                medicines.data.map((medicine:IMedicine) => (
+                medicines.data.map((medicine: IMedicine) => (
                   <MedicineCard key={medicine._id} medicine={medicine} />
                 ))
               ) : (
@@ -45,11 +45,11 @@ export default function FeaturedProducts() {
                 </div>
               )}
             </div>
-            
+
             {/* Shop more button */}
             <div className="flex justify-center mt-12">
               <Link href="/shop">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800">
+                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-indigo-700 dark:hover:bg-indigo-800 ">
                   Shop More Products
                 </Button>
               </Link>

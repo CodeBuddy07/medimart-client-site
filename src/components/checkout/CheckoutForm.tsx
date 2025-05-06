@@ -121,7 +121,7 @@ export default function CheckoutForm() {
             
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                 {/* Delivery Information Card */}
-                <Card className="shadow-lg">
+                <Card className="shadow-lg dark:bg-gray-800 ">
                     <CardHeader className="border-b">
                         <CardTitle className="text-xl">Delivery Information</CardTitle>
                     </CardHeader>
@@ -136,7 +136,7 @@ export default function CheckoutForm() {
                                             <FormItem>
                                                 <FormLabel>Street Address</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="123 Main St" {...field} className="py-6" />
+                                                    <Input placeholder="123 Main St" {...field} className="py-6 dark:border-gray-700 dark:bg-gray-900" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -151,7 +151,7 @@ export default function CheckoutForm() {
                                                 <FormItem>
                                                     <FormLabel>City</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="New York" {...field} className="py-6" />
+                                                        <Input placeholder="New York" {...field} className="py-6 dark:border-gray-700 dark:bg-gray-900" />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -164,7 +164,7 @@ export default function CheckoutForm() {
                                                 <FormItem>
                                                     <FormLabel>State/Province</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="NY" {...field} className="py-6" />
+                                                        <Input placeholder="NY" {...field} className="py-6 dark:border-gray-700 dark:bg-gray-900" />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -180,7 +180,7 @@ export default function CheckoutForm() {
                                                 <FormItem>
                                                     <FormLabel>Postal Code</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="10001" {...field} className="py-6" />
+                                                        <Input placeholder="10001" {...field} className="py-6 dark:border-gray-700 dark:bg-gray-900" />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -193,7 +193,7 @@ export default function CheckoutForm() {
                                                 <FormItem>
                                                     <FormLabel>Country</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="United States" {...field} className="py-6" />
+                                                        <Input placeholder="United States" {...field} className="py-6 dark:border-gray-700 dark:bg-gray-900" />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -219,6 +219,7 @@ export default function CheckoutForm() {
                                                                     field.onChange(file.name);
                                                                 }
                                                             }}
+                                                            className='dark:border-gray-700 dark:bg-gray-900'
                                                         />
                                                     </FormControl>
                                                     <FormMessage />
@@ -234,7 +235,7 @@ export default function CheckoutForm() {
                                 
                                 <Button 
                                     type="submit" 
-                                    className="w-full py-6 text-lg" 
+                                    className="w-full py-6 text-lg dark:bg-gray-950 dark:hover:bg-gray-900 dark:text-white" 
                                     disabled={isPending}
                                 >
                                     {isPending ? 'Processing...' : 'Place Order & Pay'}
@@ -245,15 +246,15 @@ export default function CheckoutForm() {
                 </Card>
 
                 {/* Order Summary Card */}
-                <Card className="shadow-lg h-fit sticky top-8">
-                    <CardHeader className="border-b">
-                        <CardTitle className="text-xl">Order Summary</CardTitle>
+                <Card className="shadow-lg h-fit sticky dark:bg-gray-800 top-8">
+                    <CardHeader className="border-b dark:border-gray-700">
+                        <CardTitle className="text-xl pb-3">Order Summary</CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
                         <div className="space-y-6">
                             <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
                                 {cart.map((item) => (
-                                    <div key={item._id} className="flex justify-between items-start pb-4 border-b">
+                                    <div key={item._id} className="flex justify-between items-start pb-4 border-b dark:border-gray-700">
                                         <div>
                                             <h4 className="font-medium">{item.name}</h4>
                                             {item.requiredPrescription && (
@@ -272,7 +273,7 @@ export default function CheckoutForm() {
                                 ))}
                             </div>
                             
-                            <div className="space-y-2 border-t pt-4">
+                            <div className="space-y-2  pt-4 ">
                                 <div className="flex justify-between">
                                     <span>Subtotal</span>
                                     <span>${totalPrice.toFixed(2)}</span>

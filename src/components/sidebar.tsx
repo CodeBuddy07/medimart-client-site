@@ -105,7 +105,7 @@ export function DashboardSidebar() {
               )}
             >
               {!isCollapsed && (
-                <Link href="/" className="flex items-center gap-2 font-semibold text-white">
+                <Link href="/" className="flex items-center gap-2 font-semibold dark:text-white">
                   <span className="text-xl">MediMart</span>
                 </Link>
               )}

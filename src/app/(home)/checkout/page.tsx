@@ -5,8 +5,7 @@ export default function CheckoutPage() {
     
 
     return (
-        <div className="container mx-auto py-12 mt-20">
-            <h1 className="text-2xl font-bold mb-8">Checkout</h1>
+        <div className=" mx-auto dark:bg-gray-900 py-12 min-h-screen pt-20">
             <CheckoutForm />
         </div>
     );

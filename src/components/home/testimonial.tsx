@@ -8,6 +8,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import Title from '../shared/title';
 
 const testimonials = [
   {
@@ -62,14 +63,13 @@ const testimonials = [
 
 export default function TestimonialSection() {
   return (
-    <section className="py-16 bg-white dark:bg-gray-950">
+    <section className="py-32 bg-slate-100 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">What Our Customers Say</h2>
-          <p className="mt-4 text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-            Don&apos;t just take our word for it - hear from healthcare professionals who trust MediMart.
-          </p>
-        </div>
+
+        <Title
+          title='What Our Customers Say'
+          desc='Don&apos;t just take our word for it - hear from healthcare professionals who trust MediMart.'
+        />
 
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
@@ -82,28 +82,12 @@ export default function TestimonialSection() {
             768: { slidesPerView: 2 },
             1024: { slidesPerView: 3 },
           }}
+          className='mt-20'
         >
           {testimonials.map((testimonial) => (
             <SwiperSlide key={testimonial.id}>
-              <Card className="bg-gray-50 dark:bg-gray-900 border-0 shadow-sm h-full">
+              <Card className="bg-gray-50 dark:bg-gray-800 border-0 shadow-sm h-full">
                 <CardContent className="p-6 flex flex-col justify-between h-full">
-                  <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon
-                          key={i}
-                          className={`w-5 h-5 ${
-                            i < testimonial.rating
-                              ? 'text-yellow-400 fill-yellow-400'
-                              : 'text-gray-300 dark:text-gray-600'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-gray-700 dark:text-gray-300 mb-6">
-                      &quot;{testimonial.content}&quot;
-                    </p>
-                  </div>
                   <div className="flex items-center gap-3 mt-auto">
                     <Avatar>
                       <AvatarImage src={`/api${testimonial.avatar}`} alt={testimonial.name} />
@@ -118,6 +102,23 @@ export default function TestimonialSection() {
                       <p className="text-sm text-gray-600 dark:text-gray-400">{testimonial.role}</p>
                     </div>
                   </div>
+                  <div>
+                    <div className="flex items-center gap-1 mt-5">
+                      {[...Array(5)].map((_, i) => (
+                        <StarIcon
+                          key={i}
+                          className={`w-4 h-4 ${i < testimonial.rating
+                              ? 'text-yellow-400 fill-yellow-400'
+                              : 'text-gray-300 dark:text-gray-600'
+                            }`}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300 mt-4">
+                      &quot;{testimonial.content}&quot;
+                    </p>
+                  </div>
+
                 </CardContent>
               </Card>
             </SwiperSlide>

@@ -33,7 +33,7 @@ export default function CartIcon() {
                 </Button>
             </SheetTrigger>
 
-            <SheetContent className="w-full sm:max-w-md p-5">
+            <SheetContent className="w-full sm:max-w-md p-5 bg-gray-900">
                 <SheetHeader>
                     <SheetTitle>
                         Your Cart ({mounted ? totalItems : 0} {totalItems === 1 ? 'item' : 'items'})

@@ -23,14 +23,14 @@ export default function PaymentSuccessPage() {
   }, [router, clearCart])
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-      <Card className="max-w-md w-full">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+      <Card className="max-w-md w-full dark:bg-gray-800">
         <CardHeader>
           <CardTitle className="text-center">Payment Successful!</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center">
           <CheckCircle className="w-12 h-12 text-green-500 mb-4" />
-          <p className="text-gray-600 text-center mb-6">
+          <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
             Thank you for your purchase. Your order has been placed successfully.
           </p>
           <p className="text-sm text-gray-500 text-center">

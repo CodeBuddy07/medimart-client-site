@@ -22,7 +22,7 @@ export const useLogin = (shouldRedirect = false) => {
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
       queryClient.invalidateQueries({ queryKey: ['user'] });
-      toast.success('Login successful!');
+      toast.success('Welcome back to Medimart.');
 
       setTimeout(() => {
         router.push(data.role === 'admin' ? '/admin' : '/');
@@ -32,7 +32,7 @@ export const useLogin = (shouldRedirect = false) => {
     },
     onError: (error: any) => {
       console.log(error);
-      toast.error(error.response?.data?.message || 'Login failed');
+      toast.error(error.response?.data?.message || "Login failed. Please check your credentials.");
     },
   });
 };

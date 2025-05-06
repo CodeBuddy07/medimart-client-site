@@ -1,19 +1,12 @@
 import ShopContent from '@/components/medicines/shop-content'
-import { Loader2 } from 'lucide-react'
-import { Suspense } from 'react'
-
+import React from 'react'
 
 export default function ShopPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Suspense fallback={<div className="flex justify-center items-center">
-        <Loader2
-          className="animate-spin text-primary"
-          size={24}
-        />
-      </div>}>
-        <ShopContent  />
-      </Suspense>
+      <React.Suspense fallback={<div>Loading...</div>}>
+      <ShopContent />
+      </React.Suspense>
     </div>
   )
 }

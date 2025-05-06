@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import axiosSecure from '../Axios/AxiosSecure';
 
@@ -22,26 +22,53 @@ interface MedicineFormData {
 }
 
 
-export const useGetAllMedicines = (
-    params: {
-        search?: string;
-        category?: string;
-        minPrice?: number;
-        maxPrice?: number;
-        requiredPrescription?: boolean;
-        page?: number;
-        limit?: number;
-    } = {}
-) => {
+export const useGetAllMedicines = ({
+    search,
+    category,
+    minPrice,
+    maxPrice,
+    requiredPrescription,
+    page = 1,
+    limit = 12,
+}: {
+    search?: string;
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    requiredPrescription?: boolean;
+    page?: number;
+    limit?: number;
+} = {}) => {
     return useQuery({
-        queryKey: ['medicines', params],
+        queryKey: [
+            'medicines',
+            search ?? '',
+            category ?? '',
+            minPrice ?? '',
+            maxPrice ?? '',
+            requiredPrescription ?? '',
+            page,
+            limit,
+        ],
         queryFn: async () => {
-            const response = await axiosSecure.get('/medicine/', { params });
+            const response = await axiosSecure.get('/medicine/', {
+                params: {
+                    search,
+                    category,
+                    minPrice,
+                    maxPrice,
+                    requiredPrescription,
+                    page,
+                    limit,
+                },
+            });
             return response.data;
         },
         staleTime: 1000 * 60 * 5,
+        placeholderData: keepPreviousData, // Optional but improves UX on pagination
     });
 };
+
 
 
 export const useGetMedicineById = (id: string) => {

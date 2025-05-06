@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 export default function PaymentFailedPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
       <Card className="max-w-md w-full">
         <CardHeader>
           <CardTitle className="text-center text-red-600">Payment Failed</CardTitle>
