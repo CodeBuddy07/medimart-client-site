@@ -30,7 +30,7 @@ export default function ImageSlider({ images }: ImageSliderProps) {
           src={images[currentIndex].url}
           alt={`Product image ${currentIndex + 1}`}
           fill
-          className="object-contain p-4"
+          className="object-cover p-4"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
